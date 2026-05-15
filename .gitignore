@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+.idea/
+.vscode/
+
+media/assinatura.png
+media/teste_form_anamnese.pdf
+
+.DS_Store
+Thumbs.db

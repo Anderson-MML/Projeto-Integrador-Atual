@@ -1,0 +1,896 @@
+{% extends 'pag_web_clinicas/base.html' %}
+
+{% block extra_css %}
+<style>
+.anamnesis-page {
+    min-height: 100vh;
+    padding: 36px 20px 48px;
+    background: #eef2f6;
+    color: #233142;
+}
+
+.anamnesis-shell {
+    width: 100%;
+    max-width: 1320px;
+    margin: 0 auto;
+}
+
+.form-hero {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    align-items: flex-end;
+    margin-bottom: 18px;
+}
+
+.form-eyebrow {
+    margin: 0 0 6px;
+    color: #6f7d8c;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.form-title {
+    margin: 0;
+    color: #172436;
+    font-size: 32px;
+    line-height: 1.15;
+}
+
+.form-subtitle {
+    max-width: 700px;
+    margin: 8px 0 0;
+    color: #637083;
+    font-size: 15px;
+}
+
+.progress-card {
+    min-width: 210px;
+    padding: 14px;
+    background: #ffffff;
+    border: 1px solid #dbe3ec;
+    border-radius: 8px;
+    box-shadow: 0 12px 28px rgba(34, 49, 66, .08);
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 9px;
+    color: #405063;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.progress-track {
+    height: 8px;
+    overflow: hidden;
+    background: #e8edf3;
+    border-radius: 999px;
+}
+
+.progress-fill {
+    width: 75%;
+    height: 100%;
+    background: linear-gradient(90deg, #177e89, #25a18e);
+}
+
+.form-layout {
+    display: grid;
+    grid-template-columns: 230px minmax(0, 1fr) 330px;
+    gap: 18px;
+    align-items: start;
+}
+
+.step-sidebar,
+.form-section,
+.side-panel {
+    background: #ffffff;
+    border: 1px solid #dce4ed;
+    border-radius: 8px;
+    box-shadow: 0 14px 34px rgba(34, 49, 66, .08);
+}
+
+.step-sidebar {
+    position: sticky;
+    top: 18px;
+    padding: 18px;
+}
+
+.step-sidebar h3,
+.side-panel h3,
+.section-heading h3 {
+    margin: 0;
+    color: #172436;
+}
+
+.step-list {
+    display: grid;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.step-item {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 10px;
+    color: #526174;
+    border: 1px solid #e2e8ef;
+    border-radius: 8px;
+    background: #f8fafc;
+}
+
+.step-number {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    color: #ffffff;
+    background: #177e89;
+    border-radius: 50%;
+    font-weight: 800;
+    font-size: 13px;
+}
+
+.step-item strong {
+    display: block;
+    color: #25364a;
+    font-size: 13px;
+}
+
+.step-item span:last-child {
+    font-size: 12px;
+}
+
+.form-main {
+    display: grid;
+    gap: 18px;
+}
+
+.form-section {
+    padding: 22px;
+}
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    align-items: flex-start;
+    padding-bottom: 16px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid #e5ebf1;
+}
+
+.section-heading p {
+    margin: 5px 0 0;
+    color: #667487;
+    font-size: 13px;
+}
+
+.section-tag {
+    padding: 5px 10px;
+    color: #177e89;
+    background: #e8f6f4;
+    border: 1px solid #bee6df;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.personal-grid,
+.address-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.personal-item,
+.infoadd-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.personal-item label,
+.infoadd-field label,
+.signature-label,
+.question-label {
+    color: #344358;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.personal-item input,
+.personal-item select,
+.personal-item textarea,
+.infoadd-field textarea,
+.right input,
+.right textarea,
+.right select {
+    width: 100%;
+    min-height: 42px;
+    padding: 10px 12px;
+    color: #172436;
+    background: #ffffff;
+    border: 1px solid #cfd8e3;
+    border-radius: 8px;
+    box-sizing: border-box;
+    outline: none;
+    font-size: 14px;
+    transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.personal-item input:focus,
+.personal-item select:focus,
+.personal-item textarea:focus,
+.infoadd-field textarea:focus,
+.right input:focus,
+.right textarea:focus,
+.right select:focus {
+    border-color: #177e89;
+    box-shadow: 0 0 0 3px rgba(23, 126, 137, .14);
+}
+
+.anamnesis-list {
+    display: grid;
+    gap: 12px;
+}
+
+.pair {
+    display: grid;
+    grid-template-columns: minmax(210px, .8fr) minmax(0, 1fr);
+    gap: 14px;
+    align-items: start;
+    padding: 14px;
+    background: #f9fbfd;
+    border: 1px solid #e2e8ef;
+    border-radius: 8px;
+}
+
+.left {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.left input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-top: 1px;
+    accent-color: #177e89;
+}
+
+.right input:disabled,
+.right textarea:disabled,
+.right select:disabled {
+    color: #8b97a6;
+    background: #eef2f6;
+}
+
+.infoadd-field {
+    margin-top: 18px;
+}
+
+#id_infoadd {
+    min-height: 130px;
+    max-width: 100%;
+    resize: vertical;
+}
+
+.side-panel {
+    position: sticky;
+    top: 18px;
+    display: grid;
+    gap: 18px;
+    padding: 18px;
+}
+
+.side-card {
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8ef;
+    border-radius: 8px;
+}
+
+.side-card h3 {
+    font-size: 17px;
+}
+
+.side-card p {
+    margin: 8px 0 0;
+    color: #627084;
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.terms-box {
+    height: 250px;
+    margin-top: 12px;
+    overflow-y: auto;
+    padding: 14px;
+    background: #ffffff;
+    border: 1px solid #d6dee8;
+    border-radius: 8px;
+    line-height: 1.55;
+}
+
+.terms-box p {
+    margin: 0 0 12px;
+    color: #344358;
+    font-size: 13px;
+}
+
+.terms-box hr {
+    border: 0;
+    border-top: 1px solid #dce4ed;
+    margin: 14px 0;
+}
+
+.terms-check {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-top: 12px;
+    color: #344358;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.terms-check input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-top: 1px;
+    accent-color: #177e89;
+}
+
+.assinatura-field {
+    display: grid;
+    gap: 10px;
+}
+
+.assinatura-hint {
+    margin: 0;
+    color: #647489;
+    font-size: 13px;
+}
+
+.assinatura-field .jSignature,
+.assinatura-field .jSignature div,
+.assinatura-field .jSignature canvas {
+    border-radius: 8px !important;
+}
+
+.assinatura-field .jSignature {
+    width: 100% !important;
+    display: block;
+    overflow: hidden;
+    box-sizing: border-box;
+    background: #ffffff;
+    border: 1px dashed #9fb2c7 !important;
+}
+
+.assinatura-field .jSignature canvas {
+    border: none !important;
+}
+
+.jsign-wrapper .btn,
+.submit-btn {
+    min-height: 44px;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 800;
+    transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.jsign-wrapper .btn {
+    padding: 8px 12px;
+    color: #177e89;
+    background: #e8f6f4;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 13px 16px;
+    color: #ffffff;
+    background: #177e89;
+    box-shadow: 0 12px 24px rgba(23, 126, 137, .22);
+}
+
+.submit-btn:hover {
+    background: #126a73;
+    transform: translateY(-1px);
+}
+
+.error,
+.errorlist {
+    margin: 6px 0 0;
+    padding: 8px 10px;
+    color: #9f1239;
+    background: #fff1f2;
+    border: 1px solid #fecdd3;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.errorlist {
+    list-style: none;
+}
+
+@media (max-width: 1120px) {
+    .form-layout {
+        grid-template-columns: 190px minmax(0, 1fr);
+    }
+
+    .side-panel {
+        position: static;
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 820px) {
+    .anamnesis-page {
+        padding: 22px 12px 36px;
+    }
+
+    .form-hero {
+        display: grid;
+    }
+
+    .progress-card {
+        min-width: 0;
+    }
+
+    .form-layout,
+    .personal-grid,
+    .address-grid,
+    .pair {
+        grid-template-columns: 1fr;
+    }
+
+    .step-sidebar,
+    .side-panel {
+        position: static;
+    }
+
+    .step-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .form-title {
+        font-size: 26px;
+    }
+}
+
+@media (max-width: 540px) {
+    .step-list {
+        grid-template-columns: 1fr;
+    }
+
+    .form-section,
+    .side-panel,
+    .step-sidebar {
+        padding: 14px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="anamnesis-page">
+    <div class="anamnesis-shell">
+        <div class="form-hero">
+            <div>
+                <p class="form-eyebrow">Anamnese e consentimento</p>
+                <h2 class="form-title">Ficha de Anamnese Digital</h2>
+                <p class="form-subtitle">Preencha os dados abaixo para registrar a anamnese e o termo de consentimento.</p>
+            </div>
+
+            <div class="progress-card" aria-label="Progresso do preenchimento">
+                <div class="progress-label">
+                    <span>Progresso</span>
+                    <span>75% concluído</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <form method="post" class="form-layout">
+            {% csrf_token %}
+
+            <aside class="step-sidebar" aria-label="Etapas do formulário">
+                <h3>Etapas</h3>
+                <div class="step-list">
+                    <div class="step-item">
+                        <span class="step-number">1</span>
+                        <span><strong>Dados do Paciente</strong><span>Identificação</span></span>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">2</span>
+                        <span><strong>Anamnese</strong><span>Histórico e observações</span></span>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">3</span>
+                        <span><strong>Consentimento</strong><span>Termos do procedimento</span></span>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">4</span>
+                        <span><strong>Assinatura</strong><span>Validação digital</span></span>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="form-main">
+                {% if form.non_field_errors %}
+                    <div class="form-section">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <section class="form-section">
+                    <div class="section-heading">
+                        <div>
+                            <h3>Dados Pessoais</h3>
+                            <p>Informe os dados de identificação do paciente.</p>
+                        </div>
+                        <span class="section-tag">Etapa 1</span>
+                    </div>
+
+                    <div class="personal-grid">
+                        {% for field in form %}
+                            {% if field.name in personal_fields and field.name not in address_fields %}
+                                <div class="personal-item">
+                                    {{ field.label_tag }}
+                                    {{ field }}
+
+                                    {% for error in field.errors %}
+                                        <span class="error">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="form-section">
+                    <div class="section-heading">
+                        <div>
+                            <h3>Endereço</h3>
+                            <p>Complete os dados de contato e localização.</p>
+                        </div>
+                        <span class="section-tag">Etapa 1</span>
+                    </div>
+
+                    <div class="address-grid">
+                        {% for field in form %}
+                            {% if field.name in address_fields %}
+                                <div class="personal-item">
+                                    {{ field.label_tag }}
+                                    {{ field }}
+
+                                    {% for error in field.errors %}
+                                        <span class="error">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="form-section">
+                    <div class="section-heading">
+                        <div>
+                            <h3>Anamnese</h3>
+                            <p>Marque as condições existentes e descreva detalhes quando necessário.</p>
+                        </div>
+                        <span class="section-tag">Etapa 2</span>
+                    </div>
+
+                    <div class="anamnesis-list">
+                        {% for bool_field, str_field in fields %}
+                            <div class="pair">
+                                <div class="left">
+                                    {{ bool_field }}
+                                    <label class="question-label" for="{{ bool_field.id_for_label }}">
+                                        {{ bool_field.label }}
+                                    </label>
+
+                                    {% for error in bool_field.errors %}
+                                        <div class="error">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="right">
+                                    {{ str_field }}
+
+                                    {% for error in str_field.errors %}
+                                        <div class="error">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="infoadd-field">
+                        <label for="{{ form.infoadd.id_for_label }}">{{ form.infoadd.label }}</label>
+                        {{ form.infoadd }}
+                        {% for error in form.infoadd.errors %}
+                            <div class="error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                </section>
+            </main>
+
+            <aside class="side-panel">
+                <section class="side-card">
+                    <h3>Termos e Condições</h3>
+                    <p>Leia o termo até o final para habilitar o aceite antes de finalizar a ficha.</p>
+
+                    <div id="termsBox" class="terms-box">
+                        <p><strong>1. INFORMAÇÕES GENÉRICAS</strong></p>
+                        <p>
+                            A toxina botulínica “A” basicamente inibe a liberação exocitótica
+                            da acetilcolina nos terminais motores levando a uma diminuição da
+                            contração muscular.
+                        </p>
+
+                        <p><strong>2. INDICAÇÕES</strong></p>
+                        <p>
+                            Esse procedimento é indicado para prevenção de rugas estáticas.
+                        </p>
+                        <p>
+                            Esse procedimento não é indicado em caso de reação alérgica já
+                            conhecida a qualquer um dos componentes.
+                        </p>
+
+                        <p><strong>3. MODO DE AÇÃO</strong></p>
+                        <p>
+                            A toxina botulínica causa uma semiparalisação da musculatura e,
+                            portanto, NÃO preenche rugas. Esta semiparalisação é temporária
+                            e pode durar em média cinco meses.
+                        </p>
+
+                        <p>
+                            O efeito esperado demora entre 3 e 7 dias para acontecer.
+                            É recomendável um intervalo de 6 meses entre as aplicações para
+                            que o paciente não crie resistência à toxina e possa continuar
+                            usufruindo dos resultados.
+                        </p>
+
+                        <p><strong>4. MODO DE APLICAÇÃO E APARÊNCIA</strong></p>
+                        <p>
+                            A toxina botulínica vem em frasco estéril em formato de pó
+                            liofilizado, devendo ser diluída com soro fisiológico estéril e
+                            conservada em temperatura baixa.
+                        </p>
+
+                        <p>
+                            Sua aplicação é realizada por meio de agulha com pequenas punturas
+                            em vários pontos da face, de acordo com a análise do profissional
+                            e queixa do cliente.
+                        </p>
+
+                        <p><strong>5. CUIDADOS NECESSÁRIOS</strong></p>
+                        <p><b>
+                            Evite tocar ou massagear a região tratada nas 4 horas seguintes do procedimento,
+                            inclusive não abaixe a cabeça (para frente, para os lados) ou se deite durante esse período,
+                            evitando que a toxina migre para uma área indesejada trazendo alteração (ptose) no resultado final ao planejamento pré-aplicação.
+                        </b></p>
+
+                        <p><b>
+                            Depois desse período a área poderá ser lavada suavemente com água
+                            e sabonete próprio para o rosto.
+                        </b></p>
+
+                        <p><strong>6. EFEITOS COLATERAIS E RISCOS</strong></p>
+                        <p>
+                            Logo após a aplicação pode ocorrer vermelhidão, edema,
+                            sensibilidade, coceira na região afetada.
+                        </p>
+
+                        <p>
+                            Fazer compressa fria na região afetada.
+                            NÃO use gelo diretamente no local afetado.
+                            Trata-se de uma reação normal e esse incômodo pode durar de um a três dias.
+                            Após esse período comunicar ao profissional, caso o incômodo persista.
+                        </p>
+
+                        <p><strong>7. DURAÇÃO DO EFEITO</strong></p>
+                        <p>
+                            De uma maneira geral a durabilidade varia de organismo para
+                            organismo, podendo ser de 4 a 6 meses.
+                        </p>
+
+                        <p>
+                            O pagamento contempla somente uma aplicação e uma eventual reaplicação,
+                            no prazo de 15 dias caso esta seja feita para retoques.
+                        </p>
+
+                        <p><strong>8. RETORNO</strong></p>
+                        <p>
+                            Para manter a correção na região, será necessário repetir o procedimento
+                            com o decorrer do tempo. É de responsabilidade do paciente o agendamento e
+                            o comparecimento ao consultório para possíveis correções, estando sujeito à agenda
+                            e local de atendimento do profissional.
+                        </p>
+
+                        <p><strong>9. RESULTADO</strong></p>
+                        <p>
+                            Alguns fatores irão influenciar no resultado do procedimento por
+                            se tratar de um agente biológico. Uma pequena parte da população possui
+                            resistência à toxina botulínica e, neste caso, não há 100% da resposta esperada.
+                        </p>
+
+                        <p>
+                            O paciente deverá ter ciência de que cada resultado é único, cada organismo reage de uma maneira.
+                            As informações descritas neste termo não esgotam todas as possibilidades de riscos e complicações
+                            que podem ocorrer com a realização desse procedimento, sendo enumeradas apenas algumas.
+                        </p>
+
+                        <hr>
+
+                        <p>
+                            <strong>DECLARO QUE LI E ENTENDI</strong> as informações acima, e que antes de aceitar o procedimento,
+                            tive a oportunidade suficiente para discutir e questionar sobre o mesmo,
+                            esclarecendo minhas dúvidas.
+                        </p>
+
+                        <p>
+                            Comprometo-me a seguir, rigorosamente, todos os cuidados prescritos.
+                            Tenho consciência de que o bom resultado final também depende de mim.
+                        </p>
+
+                        <p>
+                            Declaro ciência de que a lista de riscos e complicações deste formulário
+                            pode não incluir todos os riscos conhecidos ou possíveis de acontecer
+                            neste procedimento, mas é a lista de riscos mais comuns e severos.
+                        </p>
+
+                        <p>
+                            Estou ciente ser de minha responsabilidade a leitura integral deste
+                            Termo, preparado com esmero e que me foi entregue em tempo hábil
+                            para que pudesse lê-lo e, caso ainda restasse alguma dúvida,
+                            poder dirimi-la com o profissional.
+                        </p>
+
+                        <p>
+                            Autorizo também que o profissional administre tal tratamento em mim, concordando
+                            inclusive em não responsabilizar, ou fazer quaisquer exigências
+                            ou processá-lo por danos, injúrias ou complicações que porventura
+                            ocorram fora de seu controle, os quais possam alterar os resultados
+                            previstos.
+                        </p>
+
+                        <p>
+                            Certifico que este formulário me foi explicado, que li e entendi
+                            o seu conteúdo.
+                        </p>
+
+                        <p>
+                            Forneci, sem nada omitir, para o preenchimento da ficha,
+                            todas as informações solicitadas.
+                        </p>
+
+                        <p>
+                            Assim sendo, firmo a presente declaração e autorização.
+                        </p>
+                    </div>
+
+                    <div class="terms-check">
+                        <input type="checkbox"
+                               id="termsCheckbox"
+                               name="terms_accepted"
+                               disabled
+                               required>
+
+                        <label for="termsCheckbox">
+                            Li e aceito os Termos e Condições
+                        </label>
+                    </div>
+                </section>
+
+                <section class="side-card assinatura-field">
+                    <h3>Assinatura Digital</h3>
+                    <p class="assinatura-hint">Assine no campo abaixo para validar o consentimento.</p>
+
+                    <label class="signature-label" for="{{ form.assinatura.id_for_label }}">
+                        {{ form.assinatura.label }}
+                    </label>
+
+                    {{ form.assinatura }}
+                    {{ form.media }}
+
+                    {% for error in form.assinatura.errors %}
+                        <div class="error">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                </section>
+
+                <button type="submit" class="submit-btn">Finalizar e gerar PDF</button>
+            </aside>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+window.addEventListener("load", function () {
+    const resetButton = document.querySelector('.jsign-wrapper .btn');
+
+    if (resetButton) {
+        resetButton.value = "Limpar Assinatura";
+    }
+});
+</script>
+
+<script>
+const birthDateField = document.getElementById('id_data_nasc');
+
+if (birthDateField) {
+    birthDateField.addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\D/g, '');
+
+        if (value.length > 2) {
+            value = value.slice(0, 2) + '/' + value.slice(2);
+        }
+        if (value.length > 5) {
+            value = value.slice(0, 5) + '/' + value.slice(5, 9);
+        }
+
+        e.target.value = value;
+    });
+}
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const termsBox = document.getElementById('termsBox');
+    const checkbox = document.getElementById('termsCheckbox');
+
+    if (!termsBox || !checkbox) return;
+
+    termsBox.addEventListener('scroll', function () {
+        const reachedBottom =
+            termsBox.scrollTop + termsBox.clientHeight >=
+            termsBox.scrollHeight - 5;
+
+        if (reachedBottom) {
+            checkbox.disabled = false;
+        }
+    });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const pairs = document.querySelectorAll('.pair');
+
+    pairs.forEach(pair => {
+        const checkbox = pair.querySelector('input[type="checkbox"]');
+        const rightInput = pair.querySelector('.right input, .right textarea, .right select');
+
+        if (!checkbox || !rightInput) return;
+
+        rightInput.disabled = !checkbox.checked;
+
+        checkbox.addEventListener('change', function () {
+            rightInput.disabled = !this.checked;
+
+            if (!this.checked) {
+                rightInput.value = "";
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
