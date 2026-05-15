@@ -73,9 +73,10 @@
 }
 
 .progress-fill {
-    width: 75%;
+    width: 0%;
     height: 100%;
     background: linear-gradient(90deg, #177e89, #25a18e);
+    transition: width .25s ease;
 }
 
 .form-layout {
@@ -123,6 +124,27 @@
     border: 1px solid #e2e8ef;
     border-radius: 8px;
     background: #f8fafc;
+    text-decoration: none;
+    transition: border-color .2s ease, background .2s ease, transform .2s ease;
+}
+
+.step-item:hover,
+.step-item:focus {
+    color: #25364a;
+    border-color: #b9dfe0;
+    background: #eefafa;
+    outline: none;
+    transform: translateY(-1px);
+}
+
+.step-item.is-active {
+    border-color: #177e89;
+    background: #e8f6f4;
+    box-shadow: inset 3px 0 0 #177e89;
+}
+
+.step-item.is-complete .step-number {
+    background: #25a18e;
 }
 
 .step-number {
@@ -154,6 +176,7 @@
 
 .form-section {
     padding: 22px;
+    scroll-margin-top: 24px;
 }
 
 .section-heading {
@@ -296,6 +319,7 @@
     background: #f8fafc;
     border: 1px solid #e2e8ef;
     border-radius: 8px;
+    scroll-margin-top: 24px;
 }
 
 .side-card h3 {
@@ -495,10 +519,10 @@
             <div class="progress-card" aria-label="Progresso do preenchimento">
                 <div class="progress-label">
                     <span>Progresso</span>
-                    <span>75% concluído</span>
+                    <span id="progressText">0% concluído</span>
                 </div>
                 <div class="progress-track">
-                    <div class="progress-fill"></div>
+                    <div class="progress-fill" id="progressFill"></div>
                 </div>
             </div>
         </div>
@@ -509,22 +533,22 @@
             <aside class="step-sidebar" aria-label="Etapas do formulário">
                 <h3>Etapas</h3>
                 <div class="step-list">
-                    <div class="step-item">
+                    <a class="step-item is-active" href="#dados-paciente" data-step-target="dados-paciente">
                         <span class="step-number">1</span>
                         <span><strong>Dados do Paciente</strong><span>Identificação</span></span>
-                    </div>
-                    <div class="step-item">
+                    </a>
+                    <a class="step-item" href="#anamnese" data-step-target="anamnese">
                         <span class="step-number">2</span>
                         <span><strong>Anamnese</strong><span>Histórico e observações</span></span>
-                    </div>
-                    <div class="step-item">
+                    </a>
+                    <a class="step-item" href="#consentimento" data-step-target="consentimento">
                         <span class="step-number">3</span>
                         <span><strong>Consentimento</strong><span>Termos do procedimento</span></span>
-                    </div>
-                    <div class="step-item">
+                    </a>
+                    <a class="step-item" href="#assinatura" data-step-target="assinatura">
                         <span class="step-number">4</span>
                         <span><strong>Assinatura</strong><span>Validação digital</span></span>
-                    </div>
+                    </a>
                 </div>
             </aside>
 
@@ -535,7 +559,7 @@
                     </div>
                 {% endif %}
 
-                <section class="form-section">
+                <section class="form-section" id="dados-paciente" data-progress-section="dados-paciente">
                     <div class="section-heading">
                         <div>
                             <h3>Dados Pessoais</h3>
@@ -560,7 +584,7 @@
                     </div>
                 </section>
 
-                <section class="form-section">
+                <section class="form-section" id="endereco" data-progress-section="endereco">
                     <div class="section-heading">
                         <div>
                             <h3>Endereço</h3>
@@ -585,7 +609,7 @@
                     </div>
                 </section>
 
-                <section class="form-section">
+                <section class="form-section" id="anamnese" data-progress-section="anamnese">
                     <div class="section-heading">
                         <div>
                             <h3>Anamnese</h3>
@@ -630,7 +654,7 @@
             </main>
 
             <aside class="side-panel">
-                <section class="side-card">
+                <section class="side-card" id="consentimento" data-progress-section="consentimento">
                     <h3>Termos e Condições</h3>
                     <p>Leia o termo até o final para habilitar o aceite antes de finalizar a ficha.</p>
 
@@ -797,7 +821,7 @@
                     </div>
                 </section>
 
-                <section class="side-card assinatura-field">
+                <section class="side-card assinatura-field" id="assinatura" data-progress-section="assinatura">
                     <h3>Assinatura Digital</h3>
                     <p class="assinatura-hint">Assine no campo abaixo para validar o consentimento.</p>
 
@@ -891,6 +915,124 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('.form-layout');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const stepLinks = Array.from(document.querySelectorAll('[data-step-target]'));
+    const scrollSections = [
+        { target: 'dados-paciente', section: document.getElementById('dados-paciente') },
+        { target: 'dados-paciente', section: document.getElementById('endereco') },
+        { target: 'anamnese', section: document.getElementById('anamnese') },
+    ];
+
+    if (!form || !progressFill || !progressText) return;
+
+    function filledValue(field) {
+        if (!field || field.disabled) return false;
+        if (field.type === 'checkbox' || field.type === 'radio') return field.checked;
+        return String(field.value || '').trim().length > 0;
+    }
+
+    function fieldGroupScore(selectors) {
+        const fields = selectors
+            .flatMap(selector => Array.from(document.querySelectorAll(selector)))
+            .filter(field => field.type !== 'hidden' && field.name !== 'csrfmiddlewaretoken');
+
+        if (!fields.length) return 0;
+
+        const filled = fields.filter(filledValue).length;
+        return filled / fields.length;
+    }
+
+    function hasSignature() {
+        const signatureField = document.querySelector('[name="assinatura"]');
+        const value = signatureField ? String(signatureField.value || '').trim() : '';
+
+        return value.length > 2 && value !== '[]';
+    }
+
+    function hasAnamnesisInfo() {
+        const infoField = document.getElementById('id_infoadd');
+        const checkedAnswers = document.querySelectorAll('.pair input[type="checkbox"]:checked').length;
+
+        return filledValue(infoField) || checkedAnswers > 0;
+    }
+
+    function setStepState(target, isComplete) {
+        stepLinks
+            .filter(link => link.dataset.stepTarget === target)
+            .forEach(link => link.classList.toggle('is-complete', isComplete));
+    }
+
+    function updateProgress() {
+        const patientScore = fieldGroupScore([
+            '#dados-paciente input, #dados-paciente select, #dados-paciente textarea',
+            '#endereco input, #endereco select, #endereco textarea',
+        ]);
+        const anamnesisScore = hasAnamnesisInfo() ? 1 : 0;
+        const consentScore = document.getElementById('termsCheckbox')?.checked ? 1 : 0;
+        const signatureScore = hasSignature() ? 1 : 0;
+
+        const progress = Math.round(
+            (patientScore * 50) +
+            (anamnesisScore * 20) +
+            (consentScore * 15) +
+            (signatureScore * 15)
+        );
+
+        progressFill.style.width = `${progress}%`;
+        progressText.textContent = `${progress}% concluído`;
+
+        setStepState('dados-paciente', patientScore === 1);
+        setStepState('anamnese', anamnesisScore === 1);
+        setStepState('consentimento', consentScore === 1);
+        setStepState('assinatura', signatureScore === 1);
+    }
+
+    function setActiveStep(target) {
+        stepLinks.forEach(link => {
+            link.classList.toggle('is-active', link.dataset.stepTarget === target);
+        });
+    }
+
+    function updateActiveStepByScroll() {
+        const entries = scrollSections
+            .filter(item => item.section)
+            .map(item => ({
+                target: item.target,
+                top: item.section.getBoundingClientRect().top,
+            }))
+            .filter(entry => entry.top <= 170);
+
+        if (entries.length) {
+            setActiveStep(entries[entries.length - 1].target);
+        }
+    }
+
+    stepLinks.forEach(link => {
+        link.addEventListener('click', function () {
+            setActiveStep(this.dataset.stepTarget);
+        });
+    });
+
+    form.addEventListener('input', updateProgress);
+    form.addEventListener('change', updateProgress);
+    form.addEventListener('mouseup', function () {
+        window.setTimeout(updateProgress, 120);
+    });
+    form.addEventListener('touchend', function () {
+        window.setTimeout(updateProgress, 120);
+    });
+    document.addEventListener('scroll', updateActiveStepByScroll, { passive: true });
+
+    window.setInterval(updateProgress, 700);
+    updateProgress();
+    updateActiveStepByScroll();
 });
 </script>
 {% endblock %}
