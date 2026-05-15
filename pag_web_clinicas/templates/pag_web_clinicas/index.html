@@ -1,14 +1,33 @@
 {% extends 'pag_web_clinicas/base.html' %}
 
+{% block extra_css %}
+<style>
+.hero-actions .btn-primary {
+    background-color: #4b2e83;
+}
+
+.hero-actions .btn-primary:hover {
+    background-color: #36205f;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 
 <section class="hero">
     <h1>Realce sua beleza natural</h1>
     <p>Tratamentos estéticos faciais e corporais com tecnologia e cuidado profissional</p>
+    <p class="hero-anamnese-text">Preencha sua ficha de anamnese e termo de consentimento de forma digital.</p>
 
-    <a class="btn" href="https://wa.me/5511971587144" target="_blank">
-        Agendar pelo WhatsApp
-    </a>
+    <div class="hero-actions">
+        <a class="btn btn-primary" href="/form/">
+            Acessar Formulário de Anamnese
+        </a>
+
+        <a class="btn btn-secondary" href="https://wa.me/5511971587144" target="_blank">
+            Agendar pelo WhatsApp
+        </a>
+    </div>
 </section>
 
 <section class="servicos">

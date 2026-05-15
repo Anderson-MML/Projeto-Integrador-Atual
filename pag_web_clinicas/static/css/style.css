@@ -37,6 +37,21 @@ body {
     margin: 20px 0;
 }
 
+.hero-anamnese-text {
+    max-width: 620px;
+    margin: 14px auto 0;
+    color: #5f4b7d;
+    font-weight: 500;
+}
+
+.hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 28px;
+}
+
 /* BOTÃO */
 .btn {
     display: inline-block;
@@ -50,6 +65,19 @@ body {
 
 .btn:hover {
     background-color: #7c3aed;
+}
+
+.hero-actions .btn-primary {
+    background-color: #4b2e83;
+    box-shadow: 0 12px 24px rgba(75, 46, 131, 0.22);
+}
+
+.hero-actions .btn-primary:hover {
+    background-color: #36205f;
+}
+
+.hero-actions .btn-secondary {
+    background-color: #a78bfa;
 }
 
 /* SERVIÇOS */
@@ -90,6 +118,129 @@ body {
 .logo img {
     height: 60px;
     width: auto;
+}
+
+/* ACESSO AO FORMULÁRIO */
+.access-page {
+    min-height: calc(100vh - 196px);
+    display: grid;
+    place-items: center;
+    padding: 64px 20px;
+    background:
+        radial-gradient(circle at top left, rgba(167, 139, 250, 0.24), transparent 34%),
+        linear-gradient(135deg, #f8f5ff 0%, #efe7fb 52%, #fdfbff 100%);
+}
+
+.access-card {
+    width: 100%;
+    max-width: 440px;
+    padding: 34px;
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid #eadff8;
+    border-radius: 20px;
+    box-shadow: 0 24px 60px rgba(75, 46, 131, 0.16);
+}
+
+.access-logo {
+    width: 150px;
+    height: auto;
+    margin-bottom: 18px;
+}
+
+.access-eyebrow {
+    margin: 0 0 8px;
+    color: #7c3aed;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.access-card h2 {
+    margin: 0;
+    color: #4b2e83;
+    font-size: 30px;
+    line-height: 1.2;
+}
+
+.access-subtitle {
+    margin: 14px 0 0;
+    color: #655572;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.access-error {
+    margin-top: 18px;
+    padding: 12px 14px;
+    color: #8f1d2c;
+    background: #fff1f3;
+    border: 1px solid #f4b8c1;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.access-form {
+    display: grid;
+    gap: 12px;
+    margin-top: 24px;
+    text-align: left;
+}
+
+.access-form label {
+    color: #4b2e83;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.access-form input {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 48px;
+    padding: 12px 14px;
+    color: #332842;
+    background: #fbfaff;
+    border: 1px solid #d8c4f2;
+    border-radius: 12px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.access-form input:focus {
+    background: #ffffff;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.16);
+}
+
+.access-form button {
+    width: 100%;
+    min-height: 50px;
+    margin-top: 8px;
+    color: #ffffff;
+    background: #4b2e83;
+    border: 0;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 14px 28px rgba(75, 46, 131, 0.22);
+    transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+.access-form button:hover {
+    background: #36205f;
+    transform: translateY(-1px);
+    box-shadow: 0 18px 34px rgba(75, 46, 131, 0.26);
+}
+
+.access-note {
+    margin: 18px 0 0;
+    color: #73627e;
+    font-size: 13px;
+    line-height: 1.5;
 }
 
 /* SOBRE */
@@ -239,4 +390,78 @@ body {
 
 .contato-card ul li:last-child {
     border-bottom: none;
+}
+
+@media (max-width: 760px) {
+    .navbar {
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        padding: 16px 20px;
+    }
+
+    .navbar nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 14px;
+    }
+
+    .navbar a {
+        margin-left: 0;
+    }
+
+    .hero {
+        padding: 70px 18px;
+    }
+
+    .hero h1 {
+        font-size: 34px;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+        max-width: 340px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .btn {
+        text-align: center;
+    }
+
+    .cards,
+    .servicos-grid,
+    .contato-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card,
+    .servico-card,
+    .contato-card {
+        width: min(100%, 360px);
+        box-sizing: border-box;
+    }
+
+    .cta,
+    .servicos-pagina,
+    .contato-pagina {
+        padding: 46px 20px;
+    }
+
+    .access-page {
+        min-height: auto;
+        padding: 42px 16px;
+    }
+
+    .access-card {
+        padding: 28px 20px;
+        border-radius: 18px;
+    }
+
+    .access-card h2 {
+        font-size: 25px;
+    }
 }

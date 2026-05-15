@@ -1,5 +1,4 @@
 from django.shortcuts import render, HttpResponse, redirect
-from django.http import HttpResponseForbidden
 from .services import PDFgen
 from .services import build_pairs
 from pathlib import Path
@@ -72,7 +71,12 @@ def form_anam(request):
             request.session["form_anam_ok"] = True
             return redirect(request.path)
 
-        return HttpResponseForbidden("Senha incorreta")
+        return render(
+            request,
+            "pag_web_clinicas/password_form.html",
+            {"error_message": "Senha incorreta. Verifique a senha de acesso e tente novamente."},
+            status=403,
+        )
 
     return render(request, "pag_web_clinicas/password_form.html")
 
